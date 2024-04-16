@@ -4,10 +4,10 @@ import java.util.Scanner;
 
 public class Room {
 	static int atk,hp=30,lvl=0,gold=0,r=0,y=0, hit=0;//player stats
+	static double xp =0, loot = 0;
 	static int rooms(int room, String name) {
 		// TODO Auto-generated constructor stub
 		Scanner output = new Scanner(System.in);
-		double xp = 0, loot=0; //Player xp
 		int mHP =0, mAtk =0; //monster stats
 		int input = 0 ,input2=0,coins =0;// input
 		switch (room) {
@@ -132,32 +132,106 @@ public class Room {
 				
 				return room;
 			case 3:// another room 
+				mHP = 15; mAtk = 2;
 				System.out.println( name + " has entered the third room. " + name + " noticed that there is a lever that is on the cave wall. What will he do?: \n1. pull the lever \n2. keep going straight");
 				input = output.nextInt();
+				if (input == 1)
+				{
+					System.out.println(name + " pulled the lever. When the lever was pulled, a skeleton fell from the sky! What will " + name+ " do!?\n1. Slash at him \n2. try to go around him");
+					input2 = output.nextInt();
+				}
 				while(input != 6876)
 				{
+					
 					if(input == 1) {
-						System.out.println(name + " pulled the lever. When the lever was pulled, a skeleton fell from the sky! What will " + name+ " do!?\n1. Slash at him \n2. try to go around him");
-						input2 = output.nextInt();
+						//System.out.println("What will " + name+ " do!?\n1. Slash at him \n2. try to go around him");
+						//input2 = output.nextInt();
 						if(input2 == 1) {
-							System.out.println("Test");
+							hit = Rand.RandomHit(3)+atk;
+							mHP = mHP - hit;
+							System.out.println(name + " attacked the skeleton! " + name + " slashed him for " + hit + " damage! The skeleton has " + mHP + "hp!");
+							hit = Rand.RandomHit(1)+mAtk;
+							hp = hp - hit;
+							System.out.println(" The skeleton shot an arrow at you! He delt " + hit + " of damage! " + name + " has " + hp + " hp!");
+							input2 = 0;
 						}
 						else if(input2==2) {
 							System.out.println("Test2");
+							input2=0;
 						}
-						else {
+						/*else {
 							System.out.println("Please type 1 or 2");
 							System.out.println(name + " pulled the lever. When the lever was pulled, a skeleton fell from the sky! What will " + name+ " do!?\n1. Slash at him \n2. try to go around him");
 							input2 = output.nextInt();
-						}
+						}*/
 					}
 					else if(input == 2) {
 						
 					}
 					else
 						System.out.println("Please type 1 or 2.");
+					if (mHP <= 0) // see if the monster is ded.
+					{
+						coins = Rand.RandMoney(41)+1;
+						gold = gold + coins;
+						loot = Rand.RandomXP()+5; // loot 5-10 xp
+						Level l2 = new Level(loot, xp, lvl); // goes to lvl class and see if you lvl up. 
+						lvl = l2.newLvl; //update lvl
+						xp = l2.newXP; //update xp
+						System.out.println("Good Job " + name +"! You have killed the Skeleton! \n Your reward is: " + loot + "XP! and got " + coins+ " coins!"); // tell player that they killed the monster
+						if (lvl >= 2); // see if lvl up
+						{
+							System.out.println("You leveled up! \n+7 HP \n+4 Attack");
+							hp = hp + 7;
+							atk = atk +4;
+							System.out.println("Your new HP is: " + hp + " and your new attack is: " + atk +".");
+						}
+						int input3 = 0;
+						while (input3 != 1 | input3 != 2 | input3 != 3 )
+						{
+							System.out.println("Do you want to go to the next room or the shop? (Press 1 to go to the next room\nPress 2 to go to the shop\nPress 3 stop playing.");
+							input3 = output.nextInt();
+							if (input3 == 1)
+							{
+								room = 4;
+								input = 6876;
+								return room;
+							}
+							else if (input3 == 2)
+							{
+								room = 5;
+								input = 6876;
+								return room;
+							}
+							else if(input3 ==3)
+							{
+								System.out.println("Okay have a good day!");
+								room = 888; // ends
+								return room;
+								
+							}
+							
+							else 
+								System.out.println("Please type in 1, 2, or 3.");
+								input = 0;
+						}
+						
+					}
+					if (input != 6876)
+					{
+					System.out.println(name + " is in the second room.\n " +  " The monster is at " + mHP + " hp. What will you do? \n1. Slash your sword \n2. Say hi "); // change what you want
+					input2 = output.nextInt();
+					}
+					if (hp <= 0)
+					{
+						System.out.println(name + "has died. You lose.");
+						room = 888;
+						input = 6876;
+						return room;
+					}
 				}
-				return room;
+				
+				
 		}
 		
 		return room;
