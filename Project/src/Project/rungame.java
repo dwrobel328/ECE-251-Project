@@ -39,6 +39,23 @@ public class rungame {
 		case 5:
 			check = Room.rooms(5,name);
 			break;
+		case 6:
+			check = Room.rooms(6,name);
+			break;
+		case 7:
+			check = Room.rooms(7,name);
+			break;
+		case 8:
+			check = Room.rooms(8,name);
+			break;
+		case 9:
+			check = Room.rooms(9,name);
+			break;
+		case 10:
+			check = Room.rooms(10,name);
+			break;
+		case 888:
+			System.out.println("Please reload the game to play again");
 		default:
 			break;
 		}
