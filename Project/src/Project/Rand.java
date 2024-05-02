@@ -20,4 +20,13 @@ static Random rand = new Random();
 		random = rand.nextInt(money);
 		return random;
 	}
+	public static boolean didTrip() {
+		int random;
+		random = rand.nextInt(1000);
+		if (random <= 500) {
+			return true;
+		}else {
+			return false;
+		}
+	}
 }

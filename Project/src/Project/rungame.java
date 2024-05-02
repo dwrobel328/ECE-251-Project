@@ -23,6 +23,7 @@ public class rungame {
 		{
 			System.out.println("Goodbye " + name + "!");
 		}
+		check = Room.rooms(7, name);
 		
 		while (check != 888)
 		{
@@ -47,12 +48,6 @@ public class rungame {
 			break;
 		case 8:
 			check = Room.rooms(8,name);
-			break;
-		case 9:
-			check = Room.rooms(9,name);
-			break;
-		case 10:
-			check = Room.rooms(10,name);
 			break;
 		case 888:
 			System.out.println("Please reload the game to play again");
