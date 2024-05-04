@@ -2,9 +2,9 @@ package Project;
 
 public class Level {
 	int newLvl;
-	double newXP;
-	public Level(double loot, double xp,int lvl) {
-		double newXP = loot + xp;
+	int newXP;
+	public Level(int loot, int xp,int lvl) {
+		int newXP = loot + xp;
 		if(newXP >= 15 & newXP <20)
 			newLvl = 2;
 		else if (newXP >= 20 & newXP <35) 

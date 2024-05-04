@@ -6,8 +6,8 @@ import Project.Level;
 import Project.Rand;
 
 public class Room {
-	static int atk=0,hp=3000,lvl=0,gold=1000,r=0,y=0, hit=0;//player stats
-	static double xp =0, loot = 0;
+	static int atk=0,hp=30,lvl=0,gold=100,r=0,y=0, hit=0;//player stats
+	static int xp =0, loot = 0;
 	static int input =  0, input2=0,x=0;
 	static int rooms(int room, String name) {
 		Scanner output = new Scanner(System.in);
@@ -15,9 +15,6 @@ public class Room {
 		int coins =0, i =0;// input
 		switch (room) {
 			case 1: //chest room 
-				
-				//System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n"+name + " walked in the first room. You discovered that there is three chest numbered: '1', '2', '3'. \n What will " + name+ " take?"  );
-				//input = output.nextInt();
 				System.out.println("\n"+name + " walked in the first room. He discovered that there are three chest numbered: '1', '2', '3'. \nWhich chest will " + name+ " take?"  );
 				input = output.nextInt();
 				while (i !=1)// while so they need to answer it.
@@ -51,7 +48,7 @@ public class Room {
 				return room;
 				
 			case 2: // mob room
-				mHP=50;mAtk = 1; // mob stat for room
+				mHP=10;mAtk = 3; // mob stat for room
 				System.out.println(name + " entered the second room. There is a monster! What will "+name+" do? \n1.Attack \n2.Say hi \n3.Hide"); // change what you want
 				input = output.nextInt(); 
 				int potionFlag = 0;
@@ -64,14 +61,14 @@ public class Room {
 						break;
 					case 1:
 							System.out.println(name + " Starts slashing the monster     " );
-							hit = Rand.RandomHit(100)+atk;
+							hit = Rand.RandomHit(5)+atk;
 							mHP -= hit ;
 							if (mHP <= 0) 
 								mHP = 0;
 							System.out.println(name + " slashed the sword and hit it for " +hit +"hp. The monster now has: " + (mHP)+ "hp.");
 							if (mHP != 0) {
 							System.out.println("The monster got up and punched "+name+"! ");
-							hit = Rand.RandomHit(100)+mAtk;
+							hit = Rand.RandomHit(2)+mAtk;
 							hp -= hit;
 							System.out.println("The monster hit "+name+" for " + hit + "hp! "+name+" now has " + hp + "hp." );
 							}
@@ -79,7 +76,7 @@ public class Room {
 							input = 0;
 							break;
 						case 2:
-							hit = Rand.RandomHit(100)+mAtk;
+							hit = Rand.RandomHit(2)+mAtk;
 							hp = hp - hit;
 							System.out.println(name + " shouted at the monster: 'Hello! come and fight me!' The monster comes running over and throws a punch! " + name + " took " + hit + " damage and has " + hp + "hp left.");
 							input = 0;
@@ -410,62 +407,63 @@ public class Room {
 				
 			case 5: // shop
 				int potion =5, armor = 1, bladeSharpener = 1;
-				System.out.println(name + " went into the shop. He noticed a man selling:  Armor (+10 hp) for 10 coins, potion (+5 hp), for 5 coins, and a blade sharpener (+10 Atk) for 20 coins. \n What will " +name + " buy (Coins: "+gold+")? \n1. armor -  " + armor + " in stock \n2. potion - " + potion + " in stock. \n3. Blade Sharpener - " + bladeSharpener + " in stock. \n4. Leave the shop");
+				System.out.println(name + " went into the shop. He noticed a man selling:  Armor (+10 hp) for 10 coins, potion (+5 hp), for 5 coins, and a blade sharpener (+10 Atk) for 20 coins. "
+						+ "\nWhat will " +name + " buy (Coins: "+gold+")? \n1.Armor -  " + armor + " in stock \n2.Potion - " + potion + " in stock. \n3.Blade Sharpener - " + bladeSharpener + " in stock. "
+								+ "\n4.Leave the shop");
 				input = output.nextInt();
 				while (input != 4)
 				{
-					
-					if(input == 1 & armor !=0 & gold >= 10) // check to see if in stock and enough coins
-					{
-						armor = 0;
-						hp = hp + 10;
+					if(armor==0&potion==0&bladeSharpener==0) {
+						System.out.println("The man says: \n\n'Thank you for your patronage brave adventurer! \nHere, take this family heirloom as a thanks.\nMay it serve you well'\n");
+						atk+=20;
+						System.out.println("*"+name+" got the Family Sword (ATK+20)*\n");
+						input =4;
+					}
+					switch(input) {
+					case 0:
+						System.out.println("The updated stock is:\n1.Armor - "+armor+"\n2.Potion - "+potion+"\n3.Blade Sharpener - "+bladeSharpener+"\nYou have "+gold+" coins. "
+								+ "Please make a selection or press 4 to leave the shop.");
+						input = output.nextInt();
+						break;
+					case 1:
+						if(armor!=0&gold>=10) {
+							armor-=1;
+							gold-=10;
+							hp+=10;
+							System.out.println(name+" purchased 1 armor. Your new health is "+hp+"hp");
+						}else {
+							System.out.println("You either have insufficient funds or the item is out of stock, please select something else");
+						}
+						input=0;
+						break;
+					case 2:
+						if(potion!=0&gold>=5) {
+							potion-=1;
+							gold-=5;
+							hp+=5;
+							System.out.println(name+" purchased 1 potion. Your new health is "+hp+"hp");
+						}else {
+							System.out.println("You either have insufficient funds or the item is out of stock, please select something else");
+						}
+						input=0;
+						break;
+					case 3:
+					if(bladeSharpener!=0&gold>=20) {
+						bladeSharpener-=1;
 						gold-=20;
-						System.out.println(name + " bought armor for 10 coins and has " + gold + " coins left.");
-						input = 0;
-						
+						atk+=10;
+						System.out.println(name+" purchased 1 Blade Sharpener. Your new attack is "+atk);
+					}else {
+						System.out.println("You either have insufficient funds or the item is out of stock, please select something else");
 					}
-					else if(armor==0) {
-						System.out.println("This item is out of stock.");
-					}
-					else if(input == 2 & potion != 0 & gold >= 5) // check to see if in stock and enough coins
-					{
-						potion -= 1;
-						hp += 5;
-						gold -= 10;
-						System.out.println(name + " bought a potion for 5 coins and has " + gold + " coins left.");
-						input = 0;
-					}
-					else if(input == 2 & bladeSharpener != 0 & gold >= 20) // check to see if in stock and enough coins
-					{
-						bladeSharpener = 0;
-						atk += 10;
-						gold-= 40;
-						System.out.println(name + " bought a blade sharpener for 20 coins and has" + gold + " coins left.");
-						input = 0;
-					}
-					//if they dont have coins
-					if( input == 1 & armor != 1 | gold < 10) {
-						System.out.println("You do not have enough funds.");
-						input = 0;
-					}
-					else if(input == 2 & potion != 1 | gold < 5) {
-						System.out.println("You do not have enough funds.");
-						input = 0;
-					}
-					else if(input == 2 & bladeSharpener != 1 | gold < 20)
-					{
-						System.out.println("You do not have enough funds.");
-						input = 0;
-					}
-					if(input != 1 | input != 2|input != 3|input != 4 | input != 0)
-					{
-						System.out.println("Please type 1, 2, 3, or 4");
-						input = 0;
-					}
-					if (input == 0) {
-					System.out.println("The update stock is: \n1.Armor -  " + armor + " in stock \n2.Potion - " + potion + " in stock. \n3.Blade Sharpener - " + bladeSharpener + " in stock. \n4.Leave the shop ");
-					input = output.nextInt();
+					input=0;
 					break;
+					case 4:
+						input=4;
+						break;	
+					default:
+						System.out.println("Please type 1, 2, 3, or 4");
+						input = output.nextInt();
 					}
 				}
 				System.out.println("Would " + name + " like to go to the next room? \n1.Go to the next room \n2.Quit");
@@ -502,6 +500,10 @@ public class Room {
 				while (i != 1)
 				{
 					switch (input) {
+					case 0:
+						System.out.println("Please pick up another material");
+						input = output.nextInt();
+						break;
 					case 1:
 						if (boulder ==1) {
 						hp = hp/2;
@@ -519,21 +521,25 @@ public class Room {
 						break;
 					case 3:
 						if (goldIngot ==1) {							
-								System.out.println(name + " put the gold ingot in his pocket. This is worth 35 coins!");
 								gold += 35;
-								goldIngot = 0;
-								System.out.println("Please pick up another material");							
+								System.out.println(name + " put the gold ingot in his pocket. This is worth 35 coins!\nYou now have "+gold+" coins.");								
+								goldIngot = 0;															
 							}else {
 								System.out.println("You already picked up the Gold Ingot");
 							}
 							input =0;
+						break; 
+					default:
+						System.out.println("Please type 1, 2, or 3");
+						input = output.nextInt();
+					}
 					}
 					if (hp <= 0) {
 						System.out.println(name + " has died. You lose.");
 						room = 888;
 						return room;
 					}
-				}
+				
 				System.out.println(name + " walked to the end of the tunnel, and noticed a door. Will " + name + " go through that door? \n1. Go to the next room \n2. Quit");
 				input = output.nextInt();
 				while(input2 != 1) {
@@ -560,184 +566,247 @@ public class Room {
 				}
 				}
 			case 7: //room 7
-				mHP = 30; mAtk = 10;
-				System.out.println(name + " has entered a new room. " + name + " saw a small looking figure. " + name + " thought to himself, 'What is that thing? ' While thinking this, the little elf came up to " + name + " and said, 'Hello! I am Silvian, an elf! I need you're help young adventurer! Will you help me?  \n What will " + name + " do? \n1. Say yes \n2. say no");
+				mHP = 30; mAtk = 10;x=0;
+				System.out.println(name + " entered the room and saw a small, curled up figure. " + name + " thought to himself, "
+						+ "'What is that thing?' "+name+" pondered, when suddenly the figure uncurled into a small man! \n\n'Hello! I am Silvian, a dwarf! "
+								+ "I need your help young adventurer! Will you help me?  \n\nWhat will " + name + " do? \n1.Say yes \n2.Say no");
 				input = output.nextInt();
-				int tries =0,coin=0, eAtk;
-				while (i != 1)
-				{
-				switch(input) {
-					
-					case 1:
-						System.out.println(name + " said: 'of course I can help you! what do you need help with?' \n Silvian responds: ' Can you find my wand? I was sleeping and some troll hid it!' \n What will" + name + " do? \n1. Check behind the rock \n2. Check behind the log \n3. check behind the camping bag.");
+				int tries =0,coin=0, eAtk=0, reason = 0;
+				while (i != 1){
+				switch(input) {										
+				case 1:
+						System.out.println(name + " said: 'Of course I can help you! what do you need help with?' \nSilvian responds: 'Can you find my wand? I was sleeping and some troll hid it!' "
+								+ "\nWhat will" + name + " do? \n1.Check behind the rock \n2.Check behind the log \n3.Check behind the camping bag.");
 						input2 = output.nextInt();
-						//finish later
-						while( x != 1)
+						while( x != 1) //looking for the wand
 						{
 							switch(input2) {
 							case 1:
 								tries++;
-								System.out.println(name + " checked behind the log. " + name+ " did not find the wand. Please look at a different spot.");
-								System.out.println(name + " said: 'of course I can help you! what do you need help with?' \n Silvian responds: ' Can you find my wand? I was sleeping and some troll hid it!' \n What will" + name + " do? \n1. Check behind the rock \n2. Check behind the log \n3. check behind the camping bag.");
+								System.out.println(name + " checked behind the log, but did not find the wand. Please look at a different spot.");
 								input2 = output.nextInt();
 								break;
 							case 2:
 								tries++;
-								System.out.println(name + " checked behind the rock. " + name+ " did not find the wand. Please look at a different spot.");
-								System.out.println(name + " said: 'of course I can help you! what do you need help with?' \n Silvian responds: ' Can you find my wand? I was sleeping and some troll hid it!' \n What will" + name + " do? \n1. Check behind the rock \n2. Check behind the log \n3. check behind the camping bag.");
+								System.out.println(name + " checked behind the rock, but did not find the wand. Please look at a different spot.");
 								input2 = output.nextInt();
-							case 3:
-								if (tries == 0) 
-								{
-									coin = Rand.RandMoney(20);
-									gold = gold + coin;
-									eAtk = Rand.RandomHit(5);
-									atk = atk + eAtk;
-									System.out.println(name + " found the wand! This was their first spot that they checked! You got a first try bonus! \n " + coin + " was added to your gold pouch. " + eAtk + " was added to your attack.");
-									
-								}
-								else
-									System.out.println(name +  " found the wand! ");
-								gold = gold + 30;
-								System.out.println("'Thank you so much! I thought I looked at that spot! Here is 30 extra gold for your trouble! \n You now have " + gold + " gold!");
-								x=1;
 								break;
+							case 3:
+								if (tries == 0) {
+									coin = Rand.RandMoney(40);
+									gold += coin+30;
+									eAtk = Rand.RandomHit(5);
+									atk += eAtk;
+									System.out.println(name + " found the wand on the first try and got a first try bonus! \n " + coin + " coins were added and attack went up by "+ eAtk+".\n"
+											+ "'Thank you so much! I thought I looked at that spot! Here is 30 extra coins for your trouble!' said Silvian. \nYou now have " + gold + " coins!");
+								}else {
+									System.out.println(name +  " found the wand! ");
+								gold += 30;
+								System.out.println("'Thank you so much! I thought I looked at that spot! Here is 30 extra coins for your trouble! \nYou now have " + gold + " coins!");
+								}
+								x=1;
+								i=1;
+								break;
+							default:
+								System.out.println("Please type in 1, 2, or 3");
+								input2 = output.nextInt();
+								break;	
 							}
 						}
-					case 2:
+						break;
+				case 2:
 						while(x!=1) {
-							System.out.println("Elf looks sad. The Elf said: ' If you dont want to help me, then fight me! What will " + name+ " do? \n1. Slash \n2. Try to talk to him");
+							System.out.println("Silvian furrowed his brows and said: \n'If you dont want to help me, then fight me! \nWhat will " + name+ " do? \n1.Slash \n2.Try to talk to him");
 							input2 = output.nextInt();
 							switch(input2) {
+							case 0:
+								System.out.println("What will "+name+" do?\n1.Attack\n2.Try and reason with Silvian");
+								input2 = output.nextInt();
+								break;
 							case 1: 
 								hit = Rand.RandomHit(3)+atk;
-								mHP = mHP - hit;
+								mHP-=hit;
+								reason--;
 								if(mHP <=0)
 									mHP = 0;
-								System.out.println(name + " attacked the Elf! " + name + " slashed him for " + hit + " damage! The Elf has " + mHP + "hp!");
+								System.out.println(name + " attacked Silvian and slashed him for " + hit + " damage! Silvian now has " + mHP + "hp!");
 								if(mHP !=0)
 								{
 								hit = Rand.RandomHit(1)+mAtk;
-								hp = hp - hit;
-								System.out.println(" The Elf punched you! He delt " + hit + " of damage! " + name + " has " + hp + " hp!");
+								hp -= hit;
+								System.out.println("Silvian punched you, dealing " + hit + " damage! You now have " + hp + "hp!");
 								}
 								else {}
 								input2 = 0;
-								break;
-							
+								break;							
 							case 2:
 								hit = Rand.RandomHit(1)+mAtk;
-								hp = hp - hit;
-								System.out.println(name + " said: \n 'Lets talk about this!!'\n\n The elf comes running over and throws a punch! " + name + " took " + hit + " damage! He has " + hp + " hp left.");
-								input2 = 0;
+								reason++;
+								if(reason<3) {
+									hp -= hit;
+									System.out.println(name + " said: 'Wait, lets talk about this!'\n\nSilvian comes running over and throws a punch! " + name + " took " + hit + " damage and has " + hp + "hp left.");
+									input2 = 0;
+								}else {
+									hp+=30;
+									System.out.println("Silvian calms down and stops attacking. "+name+" explains his quest, and the two exchange stories and laugh.\nSilvian then says, 'I'm sorry for"
+											+" my anger. Please, take this dwarven armor as a sign of peace.'\n\n*"+name+" got the Dwarven Armor (HP+30)!*\n\n");
+									x=1;
+									i=1;
+								}
+								
 								break;
 							default:
-								System.out.println("Please type in 1, or 2");
-								input = output.nextInt();
+								System.out.println("Please type in 1 or 2");
+								input2 = output.nextInt();
 								break;
 								
 						}	
-							if (mHP <= 0) // see if the monster is ded.
-							{
-								coins = Rand.RandMoney(61)+10;
-								gold = gold + coins;
-								loot = (Rand.RandomXP()+35.0); // loot 30-40 xp
-								Level l7 = new Level(loot, xp, lvl); // goes to lvl class and see if you lvl up. 
-								lvl = l7.newLvl; //update lvl
-								xp = l7.newXP; //update xp
-								System.out.println("Good Job " + name +"! You have killed the monster! \n Your reward is: " + loot + "XP! and got " + coins+ " coins!"); // tell player that they killed the monster
-								if (lvl >= 1); // see if lvl up
-								{
-									System.out.println("You leveled up! \n+10 HP \n+12 Attack");
-									hp = hp + 20;
-									atk = atk +12;
-									System.out.println("Your new HP is: " + hp + " and your new attack is: " + atk +".");
-									
-								}
-								input = 0;
-								System.out.println("Do you want to go to the next room? (Press 1 to go to the next room Press 2 to stop playing.");
-								input = output.nextInt();
-								while (input != 1 | input != 2)
-								{
-									switch(input) {
-									case 0: // ask again if the player did not put 1, or 2
-										System.out.println("Do you want to go to the next room? (Press 1 to go to the finalroom Press 2 to stop playing.");
-										input = output.nextInt();
-										break;
-									case 1:
-										room = 8;
-										i = 1;
-										return room;
-									case 2:
-										System.out.println("Okay have a good day!");
-										room = 888;
-										i=1;
-										return room;
-									default:
-										System.out.println("Please type in 1 or 2");
-										input = 0;
-										break;
-									}
-									
-								}
-								
+							if (mHP <= 0){
+								x=1;
+								i=1;
+								System.out.println(name +" killed Silvian, but no loot was found."); 
 							}
+							
 							if (hp <= 0) // if ded
 							{
 								System.out.println(name + " has died. You lose.");
 								room = 888;
+								x=1;
+								i=1;
 								break;
 							}
 						}
-					default: 
-						System.out.println("Please type in 1, or 2");
+						break;
+				default: 
+						System.out.println("(Press 1 or 2 please)");
+						input = output.nextInt();
+				}
+				
+				}
+				while (i!=2)
+				{
+					System.out.println("Do you want to go to the next room? (Press 1 to go to the final room or Press 2 to stop playing.)");
+					input = output.nextInt();
+					switch(input) {
+					case 0: // ask again if the player did not put 1, or 2
 						input = output.nextInt();
 						break;
-				}
+					case 1:
+						room = 8;
+						i = 2;
+						return room;
+					case 2:
+						System.out.println("Okay have a good day!");
+						room = 888;
+						i=2;
+						return room;
+					default:
+						System.out.println("Please type in 1 or 2");
+						input = 0;
+						break;
+					}
+					
 				}
 			case 8: // final boss
-				mAtk = 10; mHP = 40;
-				while( i != 1)
-				{
-					System.out.println(name + " entered the boss room. They are very scared but determine the beat it! The boss said: Hello young soldier. Are you ready to fight?. \n1. Attack him \n2. say hi ");
-					input = output.nextInt();
-					switch (input) {
+				int mHp=200; mAtk=15;
+				int j=0;int k=0;int y =0;int x=0;
+				System.out.println("\n"+name+" enters a massive cavern filled with gold.\nSuddenly a booming voice echoes throughout,\n\nIntruder! How dare you enter my chamber?!\nThat will be your last mistake!"
+						+"\n\n"+name+" Looks up to see a massive dragon! The final fight begins! ");
+				while(y!=1) {
+					j=0;
+					k=0;
+					x=Rand.bossAtk();
+					switch(x) {
+					case 1:
+						hp-=Rand.RandomHit(mAtk);
+						System.out.println("\nThe dragon swings his massive tail, knocking "+name+" flat on his back. Hp is now "+hp);
+						break;
+					case 2:
+						System.out.println("\nThe dragon is preparing to blow a massive fire attack, what does "+name+" do?"
+								+"\n1.Try to hide behind a pillar\n2.Try to block it\n3.Run underneath the dragon");
+						input = output.nextInt();
+						while(j !=1) {
+						switch(input) {
 						case 1:
-							System.out.println(name + " Starts slashing the final boss     " );
-							hit = Rand.RandomHit(3)+atk;
-							mHP = mHP - hit ;
-							if (mHP <= 0)
-								mHP = 0;
-							System.out.println(name + " slashed the sword, hitting him for: " +hit +" .\n The Final boss now has: " + (mHP)+ "hp.");
-							if (mHP !=0) {
-								System.out.println("The final boss got up and punched you! ");
-								hit = Rand.RandomHit(1)+mAtk;
-								hp = hp- hit;
-								System.out.println("The final boss hit you for: " + hit + "! \n You now have: " + hp + "hp." );
-								break;
-							}
-							else 
-								input = 0;
+							hp-=Rand.RandomHit(15);
+							System.out.println(name+" manages to get behind the pillar in time, but the flames shoot past on either side, reducing hp to "+hp);
+							j=1;
 							break;
 						case 2:
-							hit = Rand.RandomHit(1)+mAtk;
-							hp = hp - hit;
-							System.out.println(name + " screamed at the final boss: \n 'AHHHHH! come and fight me!'\n The final boss runs over and throws a punch! " + name + " took " + hit + " damage and has " + hp + "hp left.");
-							input = 0;
+							hp-=Rand.RandomHit(mAtk);
+							System.out.println(name+" tries to brace against the hellish flames, but takes heavy damage, reducing hp to "+hp);
+							j=1;
 							break;
-					default: 
-							System.out.println("Please type in 1,2 or 3.");
-							System.out.println(name + " entered the fourth room. " + name + " sees a final boss! What will " + name + " do? \n 1.Attack \n 2.Scream at the final boss.");
+						case 3:
+							if(Rand.runUnder()) {
+								System.out.println(name+" thought quickly and decided to run straight under the beast. The blast went clear past, dealing no damage!");
+							}else {
+								hp-=Rand.RandomHit(10);
+								System.out.println(name+" attempted to run underneath the dragon, but slipped just before making it. The attack mostly missed, reducing hp to "+hp);
+							}
+							j=1;
+							break;
+						default:
+							System.out.println("Please type in 1, 2, or 3");
 							input = output.nextInt();
 							break;
-				}
-				if (mHP <= 0) // see if the monster is ded.
-				{
-					System.out.println("Good Job " + name +"! You have killed the final boss! \n You have won the game! \n Thank you for playing! \n This was made for Spring 2024 ECE 251 and was created by: +"
-							+ "David Wrobel, George Gorgievski and Gannon Andrews. "); // tell player that they killed the monster and won the game!
-					break;
+						}
+						}
+						break;
+					case 3:
+						System.out.println("The dragon lets out a mighty roar, chilling "+name+" to the bone. What does "+name+" do?\n1.Yell Back\n2.Nothing");
+						input = output.nextInt();
+						while(k!=1) {
+						switch(input) {
+						case 1:
+							if(mAtk>=10) {
+							mAtk-=5;
+							}else {
+								System.out.println(name+" answers the dragon's roar with his own yell, but its ATK cannot be lowered");
+								k=1;
+								break;
+							}
+							System.out.println(name+" answers the dragon's roar with his own yell, intimated the dragon and lowering its ATK to "+mAtk);
+							k=1;
+							break;
+						case 2:
+							if(atk>=10) {
+							atk-=5;
+							}else {
+								System.out.println("The roar shakes "+name+" to the core, but he is not intimidated anymore");
+								k=1;
+								break;
+							}
+							System.out.println("The roar shakes "+name+" to the core, lowering ATK to "+atk);
+							k=1;
+							break;
+						default:
+							System.out.println("Please type in 1 or 2");
+							input = output.nextInt();
+							break;
+						}
+						}
+						break;
+					}
+					mHp-=Rand.RandomHit(20)+atk;
+					if(mHp<0) {
+						mHp=0;
+					}
+					System.out.println("\nHaving no other option, "+name+" slashes the dragon, reducing its hp to "+mHp+"hp.\n"+name+" has "+hp+"hp left");
+					
+					if(hp<=0) {
+						System.out.println(name+" has died. GAME OVER.");
+						y=1;
+						room = 888;
+					}
+					if(mHp<=0) {
+						System.out.println("\nCONGRATULATIONS!\nYou have beaten Dungeon Adventure!\nYour final stats are:\nGold:"+gold+"\nHP:"+hp+"\nATK:"+atk+"\n\nGame made by: \nGeorge Gorgievski\nDavid Wrobel\nGannon "
+								+ "Andrews\nFor ECE251 Project");
+						y=1;
+						room=888;
 					}
 				}
+				
 		}
 		
 	
